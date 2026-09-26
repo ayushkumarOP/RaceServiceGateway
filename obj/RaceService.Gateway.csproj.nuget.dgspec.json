@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/ayushkumar/Documents/Race Project/Gateway/RaceService.Gateway/RaceService.Gateway.csproj": {}
+    "/Users/ayushkumar/Documents/RaceService/RaceServiceGateway/RaceService.Gateway.csproj": {}
   },
   "projects": {
-    "/Users/ayushkumar/Documents/Race Project/Gateway/RaceService.Gateway/RaceService.Gateway.csproj": {
+    "/Users/ayushkumar/Documents/RaceService/RaceServiceGateway/RaceService.Gateway.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/ayushkumar/Documents/Race Project/Gateway/RaceService.Gateway/RaceService.Gateway.csproj",
+        "projectUniqueName": "/Users/ayushkumar/Documents/RaceService/RaceServiceGateway/RaceService.Gateway.csproj",
         "projectName": "RaceService.Gateway",
-        "projectPath": "/Users/ayushkumar/Documents/Race Project/Gateway/RaceService.Gateway/RaceService.Gateway.csproj",
+        "projectPath": "/Users/ayushkumar/Documents/RaceService/RaceServiceGateway/RaceService.Gateway.csproj",
         "packagesPath": "/Users/ayushkumar/.nuget/packages/",
-        "outputPath": "/Users/ayushkumar/Documents/Race Project/Gateway/RaceService.Gateway/obj/",
+        "outputPath": "/Users/ayushkumar/Documents/RaceService/RaceServiceGateway/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/ayushkumar/.nuget/NuGet/NuGet.Config"
@@ -42,6 +42,12 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Yarp.ReverseProxy": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
