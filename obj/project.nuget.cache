@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "nVq3rw3QMsE=",
+  "dgSpecHash": "2CfJrrJJvB0=",
   "success": true,
-  "projectFilePath": "/Users/ayushkumar/Documents/Race Project/Gateway/RaceService.Gateway/RaceService.Gateway.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "/Users/ayushkumar/Documents/RaceService/RaceServiceGateway/RaceService.Gateway.csproj",
+  "expectedPackageFiles": [
+    "/Users/ayushkumar/.nuget/packages/system.io.hashing/8.0.0/system.io.hashing.8.0.0.nupkg.sha512",
+    "/Users/ayushkumar/.nuget/packages/yarp.reverseproxy/2.2.0/yarp.reverseproxy.2.2.0.nupkg.sha512"
+  ],
   "logs": []
 }
