@@ -8,9 +8,14 @@ on:
         required: true
 
 env:
-  PROJECT_ID: racingglazing
-  REGION: asia-south1
-  SERVICE: raceservicegateway
+  PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+  REGION: ${{ vars.GCP_REGION }}
+  AR_REPO: ${{ vars.ARTIFACT_REGISTRY_REPOSITORY }}
+  SERVICE: ${{ vars.CLOUD_RUN_SERVICE }}
+  RUNTIME_SERVICE_ACCOUNT: ${{ vars.CLOUD_RUN_RUNTIME_SERVICE_ACCOUNT }}
+  RACE_SERVICE_URL: ${{ vars.RACE_SERVICE_URL }}
+  FORUM_SERVICE_URL: ${{ vars.FORUM_SERVICE_URL }}
+  USER_SERVICE_URL: ${{ vars.USER_SERVICE_URL }}
 
 jobs:
   deploy-preview:
@@ -34,30 +39,34 @@ jobs:
 
       - name: Configure Docker
         run: |
-          gcloud auth configure-docker asia-south1-docker.pkg.dev
+          gcloud auth configure-docker $REGION-docker.pkg.dev
 
       - name: Build Docker Image
         run: |
           docker build \
-            -t asia-south1-docker.pkg.dev/$PROJECT_ID/app-images/$SERVICE:${GITHUB_SHA} .
+            -t $REGION-docker.pkg.dev/$PROJECT_ID/$AR_REPO/$SERVICE:${GITHUB_SHA} .
 
       - name: Push Docker Image
         run: |
           docker push \
-            asia-south1-docker.pkg.dev/$PROJECT_ID/app-images/$SERVICE:${GITHUB_SHA}
+            $REGION-docker.pkg.dev/$PROJECT_ID/$AR_REPO/$SERVICE:${GITHUB_SHA}
 
       - name: Deploy Preview Service
         run: |
           gcloud run deploy ${SERVICE}-pr-${{ github.event.inputs.pr_number }} \
-            --image asia-south1-docker.pkg.dev/$PROJECT_ID/app-images/$SERVICE:${GITHUB_SHA} \
+            --project $PROJECT_ID \
+            --image $REGION-docker.pkg.dev/$PROJECT_ID/$AR_REPO/$SERVICE:${GITHUB_SHA} \
             --region $REGION \
             --platform managed \
             --allow-unauthenticated \
+            --service-account $RUNTIME_SERVICE_ACCOUNT \
+            --set-env-vars RACE_SERVICE_URL=$RACE_SERVICE_URL,FORUM_SERVICE_URL=$FORUM_SERVICE_URL,USER_SERVICE_URL=$USER_SERVICE_URL
 
       - name: Get Preview URL
         id: preview-url
         run: |
           URL=$(gcloud run services describe ${SERVICE}-pr-${{ github.event.inputs.pr_number }} \
+            --project=$PROJECT_ID \
             --region=$REGION \
             --format='value(status.url)')
 

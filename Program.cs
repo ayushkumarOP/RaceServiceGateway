@@ -1,5 +1,25 @@
 var builder = WebApplication.CreateBuilder(args);
 
+// Cloud Run environment-variable names cannot contain the hyphens used by the
+// YARP cluster IDs. Map deploy-time service URLs into their YARP paths before
+// the proxy reads configuration.
+var downstreamServiceUrls = new Dictionary<string, string?>
+{
+    ["ReverseProxy:Clusters:raceservice-cluster:Destinations:raceservice-api:Address"] =
+        builder.Configuration["RACE_SERVICE_URL"],
+    ["ReverseProxy:Clusters:forumservice-cluster:Destinations:forumservice-api:Address"] =
+        builder.Configuration["FORUM_SERVICE_URL"],
+    ["ReverseProxy:Clusters:userservice-cluster:Destinations:userservice-api:Address"] =
+        builder.Configuration["USER_SERVICE_URL"]
+};
+
+var configuredDownstreamServiceUrls = downstreamServiceUrls
+    .Where(entry => !string.IsNullOrWhiteSpace(entry.Value))
+    .ToDictionary(entry => entry.Key, entry => entry.Value);
+
+if (configuredDownstreamServiceUrls.Count > 0)
+    builder.Configuration.AddInMemoryCollection(configuredDownstreamServiceUrls);
+
 const string corsPolicyName = "TrustedFrontend";
 var corsAllowedOrigins = builder.Configuration
     .GetSection("Cors:AllowedOrigins")
