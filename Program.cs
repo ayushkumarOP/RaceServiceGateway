@@ -49,6 +49,11 @@ builder.Services.AddReverseProxy()
 
 var app = builder.Build();
 
+// Cloud Run probes the gateway itself. Keep this endpoint local so a healthy
+// gateway is not reported unavailable because a downstream service is slow or
+// temporarily unavailable.
+app.MapGet("/health", () => Results.Ok(new { status = "healthy" }));
+
 app.UseCors(corsPolicyName);
 
 // The browser negotiates CORS with the public gateway. Do not forward Origin
